@@ -38,8 +38,9 @@ if (defined $operation) {
 
         }
         elsif ($operation eq '--apply') {
-                system(chmod +x $git_cache_meta_file);
-                system(sh $git_cache_meta_file);
+		system("chmod +x $git_cache_meta_file");
+		system("sh $git_cache_meta_file");	
+
         }
         else {
                 die $help;
