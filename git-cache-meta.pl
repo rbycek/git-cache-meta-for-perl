@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 my ($operation, $git_cache_meta_file) = @ARGV;
+my $help = "Usage:\t$0 --store (metadata file)|--stdout|--apply (metadata file)\n\tDefault metadata file is \".git_cache_meta\"\n\t--apply should probably be run through sudo\n\n";
 if (defined $operation) {
         if (not defined $git_cache_meta_file) {
         $git_cache_meta_file = ".git_cache_meta";
@@ -18,7 +19,7 @@ if (defined $operation) {
                         my ($sec,$min,$hour,$day,$month,$year) = (localtime($mtime))[0,1,2,3,4,5];
                         my $fullyear = $year + 1900;
                         if (  $operation eq '--store' ){
-                                
+
                                 open(my $fh,'>>', $git_cache_meta_file );
                                 printf $fh "chown $uid \"$filename\"\n";
                                 printf $fh "chgrp $gid \"$filename\"\n";
@@ -34,15 +35,16 @@ if (defined $operation) {
                         }
                 }
                 close $git_ls;
-                
-        } 
+
+        }
         elsif ($operation eq '--apply') {
-                print "apply the thing - $git_cache_meta_file\n";
+                system(chmod +x $git_cache_meta_file);
+                system(sh $git_cache_meta_file);
         }
         else {
-                die "Usage: $0 --store (metadata file)|--stdout|--apply (metadata file)\nDefault metadata file is \".git_cache_meta\"\n\n";
+                die $help;
         }
 }
 else {
-        die "Usage: $0 --store (metadata file)|--stdout|--apply (metadata file)\nDefault metadata file is \".git_cache_meta\"\n\n";
+        die $help;
 }
